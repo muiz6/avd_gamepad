@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "avd-gamepad"
+version = "0.1.0"
+description = ""
+authors = ["muiz6 <muizhassan83@gmail.com>"]
+readme = "README.md"
+packages = [{include = "avd_gamepad"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+hidapi = "^0.13.1"
+
+
+[tool.poetry.group.dev.dependencies]
+autopep8 = "^2.0.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
