@@ -2,34 +2,36 @@ import subprocess
 
 import hid
 
+MY_DEVICE = (0x0810, 0x0001)
+
 
 def trigger_adb_event(id):
-    subprocess.run(f'adb shell input keyevent {id}', shell=True)
+    subprocess.run(f"adb shell input keyevent {id}", shell=True)
 
 
 def trigger_adb_roll(x, y):
-    subprocess.run(
-        f'adb shell input joystick roll {x} {y}', shell=True)
+    subprocess.run(f"adb shell input joystick roll {x} {y}", shell=True)
 
 
 def main():
     for device in hid.enumerate():
         print(
-            f"0x{device['vendor_id']:04x}:0x{device['product_id']:04x} {device['product_string']}")
+            f"0x{device['vendor_id']:04x}:0x{device['product_id']:04x} {device['product_string']}"
+        )
 
     gamepad = hid.device()
-    gamepad.open(0x0810, 0x0001)
+    gamepad.open(*MY_DEVICE)
     gamepad.set_nonblocking(True)
 
     while True:
         report = gamepad.read(64)
         if report:
             if report[5] == 0:
-                print('Up pressed')
+                print("Up pressed")
                 trigger_adb_event(19)
 
             if report[5] == 4:
-                print('Down pressed')
+                print("Down pressed")
                 trigger_adb_event(20)
 
             if report[5] == 6:
@@ -60,39 +62,39 @@ def main():
                 trigger_adb_event(99)
 
             if report[6] == 2:
-                print('l1 pressed')
+                print("l1 pressed")
                 trigger_adb_event(103)
 
             if report[6] == 4:
-                print('l2 pressed')
+                print("l2 pressed")
                 trigger_adb_event(104)
 
             if report[6] == 1:
-                print('r1 pressed')
+                print("r1 pressed")
                 trigger_adb_event(102)
 
             if report[6] == 8:
-                print('r2 pressed')
+                print("r2 pressed")
                 trigger_adb_event(105)
 
             if report[6] == 32:
-                print('start pressed')
+                print("start pressed")
                 trigger_adb_event(108)
 
             if report[6] == 16:
-                print('select pressed')
+                print("select pressed")
                 trigger_adb_event(109)
 
             if report[6] == 64:
-                print('thumbl pressed')
+                print("thumbl pressed")
 
             if report[6] == 128:
-                print('thumbr pressed')
+                print("thumbr pressed")
 
             trigger_adb_roll((report[3] - 127) / 127, (report[4] - 127) / 127)
 
             print(report)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
